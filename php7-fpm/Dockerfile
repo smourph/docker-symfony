@@ -8,7 +8,10 @@ LABEL maintainer="Julien DE CONTI <julien.de.conti@gmail.com>"
 RUN apt-get update && apt-get install -y \
     openssl \
     git \
-    unzip
+    unzip \
+    libicu-dev
+
+RUN mkdir -p /var/lib/php/session && chown -R www-data:www-data /var/lib/php
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
@@ -20,8 +23,14 @@ RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} >
     && "date"
 
 # Type docker-php-ext-install to see available extensions
+# Install pdo mysql
 RUN docker-php-ext-install pdo pdo_mysql
 
+# Install symfony php-intl dependency
+RUN docker-php-ext-configure intl && docker-php-ext-install intl
+
+# Install php-opcache
+RUN docker-php-ext-install opcache && docker-php-ext-enable opcache
 
 # install xdebug
 RUN pecl install xdebug \
@@ -34,8 +43,6 @@ RUN pecl install xdebug \
     && echo "xdebug.idekey=\"PHPSTORM\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-
-RUN echo 'alias sf="php app/console"' >> ~/.bashrc \
-    && echo 'alias sf3="php bin/console"' >> ~/.bashrc
+RUN echo 'alias sf="php bin/console"' >> ~/.bashrc
 
 WORKDIR /var/www/symfony

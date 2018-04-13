@@ -53,16 +53,10 @@ Docker-symfony gives you everything you need for developing Symfony application.
         ```bash
         docker-compose exec php bash
         composer install
-        # Symfony2
         sf doctrine:database:create
         sf doctrine:schema:update --force
         # Only if you have `doctrine/doctrine-fixtures-bundle` installed
         sf doctrine:fixtures:load --no-interaction
-        # Symfony3
-        sf3 doctrine:database:create
-        sf3 doctrine:schema:update --force
-        # Only if you have `doctrine/doctrine-fixtures-bundle` installed
-        sf3 doctrine:fixtures:load --no-interaction
         ```
 
 5. Enjoy :-)
@@ -117,8 +111,7 @@ docker-compose exec php composer update
 
 ```bash
 # SF commands (Tips: there is an alias inside php container)
-docker-compose exec php php /var/www/symfony/app/console cache:clear # Symfony2
-docker-compose exec php php /var/www/symfony/bin/console cache:clear # Symfony3
+docker-compose exec php php /var/www/symfony/bin/console cache:clear
 # Same command by using alias
 docker-compose exec php bash
 sf cache:clear
@@ -137,8 +130,7 @@ docker-compose exec db mysql -uroot -p"root"
 
 ```bash
 # Fix logs / cache folder permissions
-sudo chmod -R 777 app/cache app/logs # Symfony2
-sudo chmod -R 777 var/cache var/logs var/sessions # Symfony3
+sudo chmod -R 777 var/cache var/logs var/sessions
 ```
 
 ```bash
