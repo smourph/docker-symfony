@@ -1,5 +1,5 @@
-# See https://github.com/docker-library/php/blob/master/7.2/alpine3.10/fpm/Dockerfile
-FROM php:7.2-fpm
+# See https://github.com/docker-library/php/blob/master/7.3/alpine3.10/fpm/Dockerfile
+FROM php:7.3-fpm
 ARG TIMEZONE
 
 LABEL creator="Maxence POUTORD <maxence.poutord@gmail.com>"
