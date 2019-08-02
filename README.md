@@ -130,7 +130,7 @@ docker-compose exec db mysql -uroot -p"root"
 
 ```bash
 # Fix logs / cache folder permissions
-sudo chmod -R 777 var/cache var/logs var/sessions
+sudo chmod -R 777 var/cache var/log var/sessions
 ```
 
 ```bash
