@@ -53,7 +53,7 @@ Docker-symfony gives you everything you need for developing Symfony application.
         ```bash
         docker-compose exec php bash
         composer install
-        sf doctrine:database:create
+        sf doctrine:database:create --if-not-exists
         sf doctrine:schema:update --force
         # Only if you have `doctrine/doctrine-fixtures-bundle` installed
         sf doctrine:fixtures:load --no-interaction
@@ -147,6 +147,16 @@ docker-compose down
 
 # Remove all containers and all images
 docker-compose down --rmi 'all'
+```
+
+## Issues
+
+### The requested PHP extension zip is missing from your system
+
+```bash
+apt-get install zip libzip-dev
+docker-php-ext-configure zip --with-libzip-dir=/usr/include
+docker-php-ext-install zip
 ```
 
 ## FAQ
