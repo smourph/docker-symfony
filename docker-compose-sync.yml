@@ -1,0 +1,54 @@
+version: '2'
+
+services:
+    db:
+        image: mysql:5.7
+        container_name: docker-symfony-mysql
+        volumes:
+            - "./.data/db:/var/lib/mysql"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        ports:
+            - 3307:3306
+    php:
+        build:
+            context: php7-fpm
+            args:
+                TIMEZONE: ${TIMEZONE}
+        container_name: docker-symfony-php
+        volumes:
+            #- ${SYMFONY_APP_PATH}:/var/www/symfony
+            - app-sync:/var/www/symfony:nocopy
+            - ./logs/symfony:/var/www/symfony/var/log
+        ports:
+            - 9000:9000
+    nginx:
+        image: nginx
+        container_name: docker-symfony-nginx
+        ports:
+            - 8080:80
+        volumes_from:
+            - php
+        volumes:
+            - ./nginx/default.template.conf:/etc/nginx/conf.d/default.template.conf
+            - ./logs/nginx/:/var/log/nginx
+        environment:
+            - NGINX_HOST=${NGINX_HOST}
+        command: /bin/sh -c "envsubst '$$NGINX_HOST' < /etc/nginx/conf.d/default.template.conf > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    elk:
+        image: willdurand/elk
+        container_name: docker-symfony-elk
+        ports:
+            - 81:80
+        volumes:
+            - ./elk/logstash:/etc/logstash
+            - ./elk/logstash/patterns:/opt/logstash/patterns
+        volumes_from:
+            - php
+            - nginx
+volumes:
+  app-sync:
+    external: true

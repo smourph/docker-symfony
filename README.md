@@ -14,14 +14,27 @@ Docker-symfony gives you everything you need for developing Symfony application.
     cp .env.dist .env
     ```
 
-2. Build/run containers with (with and without detached mode)
+2. Build containers with
 
     ```bash
     docker-compose build
+    ```
+
+3. Run containers using docker-sync with (better performance, with and without detached mode)
+
+    ```bash
+    #docker volume create --name=app-sync
+    docker-sync start
+    docker-compose -f docker-compose-sync.yml up -d
+    ```
+
+    > ALT: Run containers using classic volume with (with and without detached mode)
+
+    ```bash
     docker-compose up -d
     ```
 
-3. Update your system host file (add value you've assigned to `NGINX_HOST` environment variable)
+4. Update your system host file (add value you've assigned to `NGINX_HOST` environment variable)
 
     > change `symfony.local` with value in your NGINX_HOST
 
@@ -37,7 +50,7 @@ Docker-symfony gives you everything you need for developing Symfony application.
     echo '127.0.0.1 symfony.local' | sudo tee -a /etc/hosts
     ```
 
-4. Prepare Symfony app
+5. Prepare Symfony app
     1. Update app/config/parameters.yml
 
         ```yml
@@ -59,7 +72,7 @@ Docker-symfony gives you everything you need for developing Symfony application.
         sf doctrine:fixtures:load --no-interaction
         ```
 
-5. Enjoy :-)
+6. Enjoy :-)
 
 ## Usage
 
@@ -142,11 +155,20 @@ docker stats $(docker inspect -f "{{ .Name }}" $(docker ps -q))
 # Stop all containers
 docker-compose stop
 
+# Stock docker-sync (if used)
+docker-sync stop
+
 # Remove all containers
 docker-compose down
 
 # Remove all containers and all images
 docker-compose down --rmi 'all'
+
+# Remove all containers and clean docker-sync (if used)
+docker-sync-stack clean
+
+# Clean docker-sync (if used)
+docker-sync clean
 ```
 
 ## Issues
