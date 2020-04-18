@@ -2,4 +2,4 @@ version: '2'
 
 syncs:
     app-sync:
-        src: '${SYMFONY_APP_PATH}'
+        src: '${WORDPRESS_PATH}'

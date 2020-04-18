@@ -24,7 +24,7 @@ RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} >
 
 # Type docker-php-ext-install to see available extensions
 # Install pdo mysql
-RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install pdo pdo_mysql mysqli
 
 # Install symfony php-intl dependency
 RUN docker-php-ext-configure intl && docker-php-ext-install intl
@@ -45,4 +45,8 @@ RUN pecl install xdebug \
 
 RUN echo 'alias sf="php bin/console"' >> ~/.bashrc
 
-WORKDIR /var/www/symfony
+WORKDIR /var/www/website
+
+RUN chown -R www-data:www-data /var/www/website
+RUN find /var/www/website -type d -exec chmod 0755 {} \;
+RUN find /var/www/website -type f -exec chmod 644 {} \;

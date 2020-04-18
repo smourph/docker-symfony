@@ -3,7 +3,7 @@ version: '2'
 services:
     db:
         image: mysql:5.6
-        container_name: docker-symfony-mysql
+        container_name: docker-wordpress-mysql
         volumes:
             - ${DATABASE_PATH}:/var/lib/mysql
             - ./mysql/mysqld_charset.cnf:/etc/mysql/conf.d/mysqld_charset.cnf
@@ -19,16 +19,15 @@ services:
             context: php8-fpm
             args:
                 TIMEZONE: ${TIMEZONE}
-        container_name: docker-symfony-php
+        container_name: docker-wordpress-php
         volumes:
-            #- ${SYMFONY_APP_PATH}:/var/www/symfony
-            - app-sync:/var/www/symfony:nocopy
-            - ./logs/symfony:/var/www/symfony/var/log
+            #- ${WORDPRESS_PATH}:/var/www/website
+            - app-sync:/var/www/website:nocopy
         ports:
             - 9000:9000
     nginx:
         image: nginx
-        container_name: docker-symfony-nginx
+        container_name: docker-wordpress-nginx
         ports:
             - 8080:80
         volumes_from:
@@ -41,7 +40,7 @@ services:
         command: /bin/sh -c "envsubst '$$NGINX_HOST' < /etc/nginx/conf.d/default.template.conf > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
     elk:
         image: willdurand/elk
-        container_name: docker-symfony-elk
+        container_name: docker-wordpress-elk
         ports:
             - 81:80
         volumes:
