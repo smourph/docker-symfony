@@ -36,18 +36,18 @@ Docker-symfony gives you everything you need for developing Symfony application.
 
 4. Update your system host file (add value you've assigned to `NGINX_HOST` environment variable)
 
-    > change `symfony.local` with value in your NGINX_HOST
+    > change `website.local` with value in your NGINX_HOST
 
     ```bash
     # UNIX only: get containers IP address and update host (replace IP according to your configuration) (on Windows, edit C:\Windows\System32\drivers\etc\hosts)
-    echo $(docker network inspect bridge | grep Gateway | grep -o -E '([0-9]{1,3}\.){3}[0-9]{1,3}') 'symfony.local' | sudo tee -a /etc/hosts
+    echo $(docker network inspect bridge | grep Gateway | grep -o -E '([0-9]{1,3}\.){3}[0-9]{1,3}') 'website.local' | sudo tee -a /etc/hosts
     ```
 
     **Note:** For **OS X**, please take a look [here](https://docs.docker.com/docker-for-mac/networking/) and for **Windows** read [this](https://docs.docker.com/docker-for-windows/#/step-4-explore-the-application-and-run-examples) (4th step).
 
     ```bash
     # MacOS / OSX only: get containers IP address and update host
-    echo '127.0.0.1 symfony.local' | sudo tee -a /etc/hosts
+    echo '127.0.0.1 website.local' | sudo tee -a /etc/hosts
     ```
 
 5. Prepare Symfony app
@@ -102,11 +102,11 @@ Docker-symfony gives you everything you need for developing Symfony application.
 
 Just run `docker-compose up -d`, then:
 
-> change `symfony.local` with value in your NGINX_HOST
+> change `website.local` with value in your NGINX_HOST
 
-* Symfony app: visit [symfony.local:8080](http://symfony.local:8080)
-* Symfony dev mode: visit [symfony.local:8080/app_dev.php](http://symfony.local:8080/app_dev.php)
-* Logs (Kibana): [symfony.local:81](http://symfony.local:81)
+* Symfony app: visit [website.local:8080](http://website.local:8080)
+* Symfony dev mode: visit [website.local:8080/app_dev.php](http://website.local:8080/app_dev.php)
+* Logs (Kibana): [website.local:81](http://website.local:81)
 * Logs (files location): logs/nginx and logs/symfony
 
 ## Customize
@@ -128,10 +128,10 @@ This results in the following running containers:
 $ docker-compose ps
         Name                      Command               State                 Ports              
 -------------------------------------------------------------------------------------------------
-docker-symfony-elk     /usr/bin/supervisord -n -c ...   Up      0.0.0.0:81->80/tcp               
-docker-symfony-mysql   docker-entrypoint.sh mysqld      Up      0.0.0.0:3307->3306/tcp, 33060/tcp
-docker-symfony-nginx   /bin/sh -c envsubst '$NGIN ...   Up      0.0.0.0:8080->80/tcp             
-docker-symfony-php     docker-php-entrypoint php-fpm    Up      0.0.0.0:9000->9000/tcp           
+docker-wordpress-elk     /usr/bin/supervisord -n -c ...   Up      0.0.0.0:81->80/tcp               
+docker-wordpress-mysql   docker-entrypoint.sh mysqld      Up      0.0.0.0:3307->3306/tcp, 33060/tcp
+docker-wordpress-nginx   /bin/sh -c envsubst '$NGIN ...   Up      0.0.0.0:8080->80/tcp             
+docker-wordpress-php     docker-php-entrypoint php-fpm    Up      0.0.0.0:9000->9000/tcp           
 ```
 
 ## Useful commands
