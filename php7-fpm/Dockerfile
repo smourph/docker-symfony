@@ -45,4 +45,4 @@ RUN pecl install xdebug \
 
 RUN echo 'alias sf="php bin/console"' >> ~/.bashrc
 
-WORKDIR /var/www/symfony
+WORKDIR /var/www/website
