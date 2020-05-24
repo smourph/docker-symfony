@@ -2,10 +2,11 @@ version: '2'
 
 services:
     db:
-        image: mysql:5.7
+        image: mysql:5.6
         container_name: docker-symfony-mysql
         volumes:
             - ${DATABASE_PATH}:/var/lib/mysql
+            - ./mysql/mysqld_charset.cnf:/etc/mysql/conf.d/mysqld_charset.cnf
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
