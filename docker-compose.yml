@@ -14,25 +14,24 @@ services:
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         ports:
             - 3307:3306
-    php:
-        build:
-            context: php7-fpm
-            args:
-                TIMEZONE: ${TIMEZONE}
-        container_name: docker-drupal-php
+    drupal:
+        image: drupal:8.8.6-fpm-alpine
+        container_name: docker-drupal-drupal
         volumes:
             - ${DRUPAL_PATH}:/var/www/html
             #- ${DRUPAL_PRIVATE_FILES_PATH}:/var/www/private
             #- ${DRUPAL_PUBLIC_FILES_PATH}/project:/var/www/html/sites/project/files
-        ports:
-            - 9000:9000
+        environment:
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            TZ: ${TIMEZONE}
     nginx:
         image: nginx
         container_name: docker-drupal-nginx
         ports:
             - 8080:80
         volumes_from:
-            - php
+            - drupal
         volumes:
             - ./nginx/default.template.conf:/etc/nginx/conf.d/default.template.conf
             - ${LOGS_PATH}/nginx/:/var/log/nginx
@@ -48,5 +47,5 @@ services:
             - ./elk/logstash:/etc/logstash
             - ./elk/logstash/patterns:/opt/logstash/patterns
         volumes_from:
-            - php
+            - drupal
             - nginx
