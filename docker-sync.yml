@@ -1,5 +1,5 @@
 version: '2'
 
 syncs:
-  app-sync:
-    src: '${SYMFONY_APP_PATH}'
+    app-sync:
+        src: '${SYMFONY_APP_PATH}'
