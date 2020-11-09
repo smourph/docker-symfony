@@ -8,14 +8,9 @@ LABEL maintainer="Julien DE CONTI <julien.de.conti@gmail.com>"
 RUN apt-get update && apt-get install -y \
     openssl \
     git \
-    unzip \
-    libicu-dev
+    unzip
 
 RUN mkdir -p /var/lib/php/session && chown -R www-data:www-data /var/lib/php
-
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && composer --version
 
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone \
@@ -26,8 +21,25 @@ RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} >
 # Install pdo mysql
 RUN docker-php-ext-install pdo pdo_mysql mysqli
 
-# Install symfony php-intl dependency
-RUN docker-php-ext-configure intl && docker-php-ext-install intl
+# Install recommended PHP extensions for WordPress
+# exif
+RUN docker-php-ext-install exif
+# zip
+RUN apt-get update && apt-get install -y libzip-dev
+RUN docker-php-ext-install zip
+# gd
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpng-dev \
+    libjpeg-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev
+RUN docker-php-ext-configure gd \
+    --with-freetype=/usr/include/ \
+    --with-jpeg=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd
+# imagick
+RUN apt-get update && apt-get install -y libmagickwand-dev --no-install-recommends
+RUN pecl install imagick && docker-php-ext-enable imagick
 
 # Install php-opcache
 RUN docker-php-ext-install opcache && docker-php-ext-enable opcache
@@ -42,8 +54,6 @@ RUN pecl install xdebug \
     && echo "xdebug.remote_connect_back=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.idekey=\"PHPSTORM\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-
-RUN echo 'alias sf="php bin/console"' >> ~/.bashrc
 
 WORKDIR /var/www/website
 
