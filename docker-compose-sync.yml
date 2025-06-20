@@ -2,7 +2,7 @@ version: '2'
 
 services:
     db:
-        image: mysql:5.6
+        image: mysql:8.0
         container_name: docker-wordpress-mysql
         volumes:
             - ${DATABASE_PATH}:/var/lib/mysql
