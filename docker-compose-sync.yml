@@ -15,7 +15,7 @@ services:
             - 3307:3306
     php:
         build:
-            context: php7-fpm
+            context: php8-fpm
             args:
                 TIMEZONE: ${TIMEZONE}
         container_name: docker-symfony-php
